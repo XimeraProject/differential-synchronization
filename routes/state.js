@@ -4,7 +4,6 @@ var router = express.Router();
 var CANON = require('canon');
 var XXHash = require('xxhash');
 function checksumObject(object) {
-  console.log("canonicalizing:",object);
     return XXHash.hash( Buffer.from(CANON.stringify( object )), 0x1337 ).toString(16);
 }
 
@@ -30,7 +29,7 @@ function wantSync( ws, session, event ) {
 
 function wantPatch( ws, session, event ) {
   var delta = jsondiffpatch.diff(session.shadow, STATE);
-  console.log( "delta=",delta);
+
   if (delta !== undefined) {
     var message = { delta: delta,
 		    checksum: checksumObject( session.shadow ) };
@@ -76,7 +75,6 @@ module.exports = function(options) {
   
   ws.on("connection", function connection(ws, req) {
     sessionParser(req, {}, function(){
-      console.log("New websocket connection:");
       var session = req.session;
       session = {};
       
@@ -96,9 +94,6 @@ module.exports = function(options) {
       ws.on('message', function incoming(message) {
 	message = JSON.parse(message);
 
-	console.log('received: %s', JSON.stringify(message));
-	console.log( 'there are ', sockets.size, 'people' );
-	
 	var fakeSocket = { socket: ws,
 			   emit: function( type, payload ) {
 			     payload.type = type;
