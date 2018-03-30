@@ -9,7 +9,11 @@ function checksumObject(object) {
 
 var sockets = new Set();
 
-var jsondiffpatch = require('jsondiffpatch');
+var jsondiffpatch = require('jsondiffpatch').create({
+  textDiff: {
+    minLength: 10
+  }
+});
 
 // In production, you'd want different state's for different groups of
 // users, for different pages, etc.  For now, we just have a single
@@ -52,6 +56,8 @@ function patch( ws, session, event ) {
     console.log('could not patch a shadow that passed a checksum test');
     console.log(e);
   }
+  
+  console.log( "delta=", event.delta  );
   
   // fuzzypatch the state, which can fail for any number of reasons
   try {

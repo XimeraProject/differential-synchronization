@@ -38,7 +38,7 @@ class App extends Component {
 	)}
 	<div><span>{this.state.value}</span></div>
 	<div>
-	    <input type="text" onChange={(event) => this.setState({value: event.target.value})} value={this.state.value}/>
+	    <textarea onChange={(event) => this.setState({value: event.target.value})} value={this.state.value}/>
 	</div>
       </div>
     );

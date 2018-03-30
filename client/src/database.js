@@ -3,12 +3,12 @@ import XXH from 'xxhashjs';
 import _ from 'underscore';
 
 // I find it annoying how hard it is to load some things under ES6
-import {diff, patch, clone} from 'jsondiffpatch/dist/jsondiffpatch.esm.js';
-const jsondiffpatch = {
-  diff: diff,
-  patch: patch,
-  clone: clone,
-};
+import {create} from 'jsondiffpatch/dist/jsondiffpatch.esm.js';
+const jsondiffpatch = create({
+  textDiff: {
+    minLength: 10
+  }
+});
 
 function checksumObject(object) {
     return XXH.h32( CANON.stringify( object ), 0x1337 ).toString(16);
@@ -65,9 +65,8 @@ const handlers = {
   'patch': function(message) {
     // Apply patch to the client state...
     jsondiffpatch.patch( DATABASE, message.delta);
-    
+
     //synchronizePageWithDatabase();
-    console.log("calling callback");
     if (Synchronizer.callback)
       Synchronizer.callback();
     
@@ -98,7 +97,7 @@ function status(type, message) {
 function differentialSynchronization() {
   if (socket.readyState !== 1) {
     status( "error", "Synchronization failed" );
-    window.setTimeout(differentialSynchronizationDebounced, 3001);
+    window.setTimeout(differentialSynchronizationDebounced, 301);
     return;
   }
 
@@ -112,6 +111,6 @@ function differentialSynchronization() {
   }
 }
 
-var differentialSynchronizationDebounced = _.debounce( differentialSynchronization, 3001 );
+var differentialSynchronizationDebounced = _.debounce( differentialSynchronization, 301 );
 
 export default Synchronizer;
