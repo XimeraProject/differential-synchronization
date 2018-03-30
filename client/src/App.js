@@ -3,7 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
-    state = {users: [], value: ""}
+  state = {users: [], value: ""}
 
   componentDidMount() {
     fetch('/users')
@@ -22,7 +22,7 @@ class App extends Component {
         {this.state.users.map(user =>
           <div key={user.id}>{user.username}</div>
 	)}
-	    <div><span>{this.state.value}</span></div>
+	<div><span>{this.state.value}</span></div>
 	<div>
 	    <input type="text" onChange={(event) => this.setState({value: event.target.value})} value={this.state.value}/>
 	</div>
