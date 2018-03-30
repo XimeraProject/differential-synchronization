@@ -17,7 +17,7 @@ module.exports = function(options) {
     sessionParser(req, {}, function(){
       console.log("New websocket connection:");
       var sess = req.session;
-      console.log("working = " + sses.working);
+      console.log("working = " + sess.working);
     });
   });
 };
