@@ -57,8 +57,6 @@ function patch( ws, session, event ) {
     console.log(e);
   }
   
-  console.log( "delta=", event.delta  );
-  
   // fuzzypatch the state, which can fail for any number of reasons
   try {
     jsondiffpatch.patch(STATE, event.delta);
