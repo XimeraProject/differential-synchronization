@@ -37,11 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 
-app.get("/ws", function(req, res, next) {
-  req.session.working = "yes!";
-  res.send("<script>var ws = new WebSocket('ws://localhost:3001');</script>");
-});
-
 app.websocket = function(ws) {
   state({ws: ws, sessionParser: sessionParser}); 
 };
