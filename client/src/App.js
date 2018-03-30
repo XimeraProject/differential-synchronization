@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
-import synchronization from './database.js';
+import database from './database.js';
 
 class App extends Component {
   state = {users: [], value: ""}
@@ -11,8 +11,20 @@ class App extends Component {
     fetch('/users')
       .then(res => res.json())
       .then(users => this.setState({ users }));
+
+    database.callback =
+      (() => this.setState( database.database ));
   }
 
+  componentDidUpdate(props, state) {
+    console.log("props=",props,this.props);
+    console.log("state=",state,this.state);
+    var that = this;
+    Object.keys( that.state ).forEach( function(key) {
+      database.database[key] = that.state[key];
+    });
+  }
+  
   render() {
     return (
       <div className="App">

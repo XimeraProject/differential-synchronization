@@ -17,6 +17,8 @@ function checksumObject(object) {
 var DATABASE = undefined;
 var SHADOW = undefined;
 
+var Synchronizer = { callback: undefined };
+
 ////////////////////////////////////////////////////////////////
 // connect to server
 var socket = new WebSocket('ws://localhost:3001/');
@@ -45,6 +47,7 @@ const handlers = {
 	    return target[property];
 	}
       };
+      Synchronizer.database = new Proxy( DATABASE, databaseChangeHandler );
       window.DATABASE = new Proxy( DATABASE, databaseChangeHandler );
     }
   },
@@ -63,7 +66,10 @@ const handlers = {
     // Apply patch to the client state...
     jsondiffpatch.patch( DATABASE, message.delta);
     
-    //synchronizePageWithDatabase();	
+    //synchronizePageWithDatabase();
+    console.log("calling callback");
+    if (Synchronizer.callback)
+      Synchronizer.callback();
     
     // Confirm that our shadow now matches their shadow
     if (checksumObject(SHADOW) !== message.checksum) {
@@ -108,4 +114,4 @@ function differentialSynchronization() {
 
 var differentialSynchronizationDebounced = _.debounce( differentialSynchronization, 3001 );
 
-export default DATABASE;
+export default Synchronizer;
